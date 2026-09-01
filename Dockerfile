@@ -1,4 +1,3 @@
-
 # Etapa 1: Construir el proyecto con Maven
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
@@ -7,11 +6,9 @@ RUN mvn dependency:go-offline
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Ejecutar la aplicación
-FROM eclipse-temurin:17-jdk-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.war app.war
+# Etapa 2: Usar Tomcat para ejecutar el WAR
+FROM tomcat:10-jdk17
+WORKDIR /usr/local/tomcat/webapps/
+COPY --from=build /app/target/*.war ROOT.war
 EXPOSE 8080
-
-# Comando para iniciar
-CMD ["java", "-jar", "app.war"]
+CMD ["catalina.sh", "run"]
