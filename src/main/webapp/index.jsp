@@ -14,7 +14,7 @@
     <div class="hero-section">
         <div class="container">
             <h1>Ludwin Pedro Rojas Rios</h1>
-            <p>E-Portafolio de Actividades y Evidencias</p>
+            <p>Portafolio de Actividades y Evidencias</p>
         </div>
     </div>
 

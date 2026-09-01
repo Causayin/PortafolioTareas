@@ -5,9 +5,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionDB {
-    private static final String URL = "jdbc:mysql://localhost:3306/portafolio_db?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true";
-    private static final String USER = "root";
-    private static final String PASSWORD = ""; // Tu password de MySQL si tiene
+    
+    private static String getEnv(String key, String defaultValue) {
+        String value = System.getenv(key);
+        return (value != null && !value.isEmpty()) ? value : defaultValue;
+    }
+    
+    private static final String HOST = getEnv("DB_HOST", "localhost");
+    private static final String PORT = getEnv("DB_PORT", "3306");
+    private static final String DB_NAME = getEnv("DB_NAME", "portafolio_db");
+    private static final String USER = getEnv("DB_USER", "root");
+    private static final String PASSWORD = getEnv("DB_PASSWORD", "");
+    
+    private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DB_NAME 
+        + "?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true";
     
     public static Connection getConnection() throws SQLException {
         try {
