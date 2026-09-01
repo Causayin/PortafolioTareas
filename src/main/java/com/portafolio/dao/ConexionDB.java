@@ -17,8 +17,9 @@ public class ConexionDB {
     private static final String USER = getEnv("DB_USER", "root");
     private static final String PASSWORD = getEnv("DB_PASSWORD", "");
     
+    // URL con SSL obligatorio para TiDB Cloud
     private static final String URL = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DB_NAME 
-        + "?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true";
+        + "?useUnicode=true&characterEncoding=UTF-8&useSSL=true&requireSSL=true&verifyServerCertificate=false&allowPublicKeyRetrieval=true";
     
     public static Connection getConnection() throws SQLException {
         try {
