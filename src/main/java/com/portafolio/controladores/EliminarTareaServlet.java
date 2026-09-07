@@ -19,7 +19,7 @@ public class EliminarTareaServlet extends HttpServlet {
         
         // Verificar que sea admin
         if (session.getAttribute("usuario") == null) {
-            response.sendRedirect("index.jsp");
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
             return;
         }
         
@@ -31,16 +31,16 @@ public class EliminarTareaServlet extends HttpServlet {
                 boolean eliminado = dao.eliminarTarea(id);
                 
                 if (eliminado) {
-                    // Redirigir al panel admin con mensaje de éxito
-                    response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?mensaje=exito");
+                    // Redirigir a gestionar_tareas con mensaje de éxito
+                    response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?mensaje=eliminada");
                 } else {
                     response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
                 }
             } catch (NumberFormatException e) {
-                response.sendRedirect("AdminServlet?msg=error");
+                response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
             }
         } else {
-            response.sendRedirect("AdminServlet");
+            response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp");
         }
     }
 }

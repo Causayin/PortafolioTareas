@@ -43,8 +43,10 @@ public class SubirTareaServlet extends HttpServlet {
         Part filePart = request.getPart("archivo");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         
-        String uploadPath = getServletContext().getRealPath("") + "uploads";
+        // CORRECCIÓN 1: Asegurar que la ruta tenga slash correcto para que Tomcat lo sirva públicamente
+        String uploadPath = getServletContext().getRealPath("/") + "uploads/";
         Path uploadDir = Paths.get(uploadPath);
+        
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }
@@ -60,20 +62,20 @@ public class SubirTareaServlet extends HttpServlet {
             ps.setString(1, titulo);
             ps.setString(2, descripcion);
             ps.setString(3, fileName);
-            ps.setString(4, "uploads/" + fileName);
+            ps.setString(4, "uploads/" + fileName); // Esta es la ruta relativa correcta para la web
             ps.setInt(5, semanaId);
             ps.setInt(6, categoriaId);
             ps.setInt(7, usuario.getId());
             
             ps.executeUpdate();
-            response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?mensaje=exito");
-            return; 
+            
+            // CORRECCIÓN 2: Cambiar guion medio (-) por guion bajo (_)
+            response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?mensaje=exito");
             
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?error=fallo");
-            return;
+            // CORRECCIÓN 2: Cambiar guion medio (-) por guion bajo (_)
+            response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
         }
-        
     }
 }
