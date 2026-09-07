@@ -12,7 +12,7 @@
         response.sendRedirect(request.getContextPath() + "/index.jsp");
         return;
     }
-    
+
     SemanaDAO semanaDAO = new SemanaDAO();
     TareaDAO tareaDAO = new TareaDAO();
     List<Semana> semanas = semanaDAO.getAllSemanas();
@@ -22,144 +22,122 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Gestionar Tareas - Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="<%= ctx %>/css/estilos.css" rel="stylesheet">
-    <style>
-        /* Estilos específicos para esta vista */
-        .semana-separator {
-            background-color: #222222;
-            border-left: 5px solid #FFD700;
-            padding: 15px 20px;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            border-radius: 0 10px 10px 0;
-        }
-        .semana-separator h3 { color: #FFD700; margin: 0; font-size: 1.5rem; }
-        
-        .tarea-item {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .tarea-item:hover { border-color: #FFD700; }
-        .tarea-info h5 { color: #fff; margin: 0 0 5px 0; font-size: 1.1rem; }
-        .tarea-info p { color: #aaa; margin: 0; font-size: 0.9rem; }
-        .tarea-info small { color: #666; }
-    </style>
-</head>
-<body>
-    <!-- Navbar Admin Simplificado -->
-    <nav class="admin-navbar" style="background:#000; border-bottom:2px solid #FFD700; padding:15px;">
-        <div class="container-fluid d-flex justify-content-between">
-            <a class="navbar-brand text-warning" href="<%= ctx %>/AdminServlet"> Volver al Dashboard</a>
-            <h4 class="text-white m-0">Gestión de Tareas</h4>
-            <button class="btn btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#modalSubir">
-                + Añadir Tarea
-            </button>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <!-- Mensajes de éxito/error -->
-        <% if ("exito".equals(request.getParameter("mensaje"))) { %>
-            <div class="alert alert-success alert-dismissible fade show">✅ Tarea subida correctamente. <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-        <% } %>
-        <% if ("fallo".equals(request.getParameter("error"))) { %>
-            <div class="alert alert-danger alert-dismissible fade show">❌ Error al subir la tarea. <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-        <% } %>
-
-        <!-- Lista de Tareas Separadas por Semana -->
-        <% for (Semana s : semanas) { %>
-            <div class="semana-separator">
-                <h3><%= s.getNombre() %>: <%= s.getDescripcion() %></h3>
+    <head>
+        <title>Gestionar Tareas - Admin</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link href="<%= ctx%>/css/estilos.css" rel="stylesheet">
+    </head>
+    <body>
+        <!-- Navbar Admin Simplificado -->
+        <nav class="admin-navbar" style="background:#000; border-bottom:2px solid #FFD700; padding:15px;">
+            <div class="container-fluid d-flex justify-content-between">
+                <a class="navbar-brand text-warning" href="<%= ctx%>/AdminServlet"> Volver al Dashboard</a>
+                <h4 class="text-white m-0">Gestión de Tareas</h4>
+                <button class="btn btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#modalSubir">
+                    + Añadir Tarea
+                </button>
             </div>
-            
+        </nav>
+
+        <div class="container mt-4">
+            <!-- Mensajes de éxito/error -->
+            <% if ("exito".equals(request.getParameter("mensaje"))) { %>
+            <div class="alert alert-success alert-dismissible fade show">✅ Tarea subida correctamente. <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+                <% } %>
+                <% if ("fallo".equals(request.getParameter("error"))) { %>
+            <div class="alert alert-danger alert-dismissible fade show">❌ Error al subir la tarea. <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+                <% } %>
+
+            <!-- Lista de Tareas Separadas por Semana -->
+            <% for (Semana s : semanas) {%>
+            <div class="semana-separator">
+                <h3><%= s.getNombre()%>: <%= s.getDescripcion()%></h3>
+            </div>
+
             <div class="ps-3">
-                <% 
+                <%
                     boolean hayTareas = false;
                     for (Tarea t : todasLasTareas) {
                         if (t.getSemanaId() == s.getId()) {
-                            hayTareas = true; 
+                            hayTareas = true;
                 %>
-                    <div class="tarea-item">
-                        <div class="tarea-info">
-                            <h5><%= t.getTitulo() %></h5>
-                            <p><%= t.getDescripcion() %></p>
-                            <small>📅 <%= t.getFechaSubida() %> | 📄 <%= t.getArchivoNombre() %></small>
-                        </div>
-                        <div>
-                            <a href="<%= ctx %>/<%= t.getArchivoRuta() %>" class="btn btn-sm btn-outline-warning" download>Descargar</a>
-                        </div>
+                <div class="tarea-item">
+                    <div class="tarea-info">
+                        <h5><%= t.getTitulo()%></h5>
+                        <p><%= t.getDescripcion()%></p>
+                        <small>📅 <%= t.getFechaSubida()%> | 📄 <%= t.getArchivoNombre()%></small>
                     </div>
-                <% 
+                    <div class="d-flex gap-2">
+                        <a href="<%= ctx%>/<%= t.getArchivoRuta()%>" class="btn btn-sm btn-outline-warning" download>Descargar</a>
+                        <a href="<%= ctx%>/EliminarTareaServlet?id=<%= t.getId()%>" 
+                           class="btn btn-sm btn-danger" 
+                           onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer.');">
+                            🗑️ Eliminar
+                        </a>
+                    </div>
+                </div>
+                <%
                         }
                     }
-                    if (!hayTareas) { 
+                    if (!hayTareas) {
                 %>
-                    <p class="text-muted fst-italic">No hay tareas subidas para esta semana aún.</p>
+                <p class="text-muted fst-italic">No hay tareas subidas para esta semana aún.</p>
                 <% } %>
             </div>
-        <% } %>
-    </div>
+            <% }%>
+        </div>
 
-    <!-- MODAL PARA SUBIR TAREA -->
-    <div class="modal fade" id="modalSubir" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="background-color: #1a1a1a; border: 2px solid #FFD700;">
-                <div class="modal-header" style="border-bottom: 2px solid #FFD700;">
-                    <h5 class="modal-title text-warning">Subir Nueva Tarea</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="<%= ctx %>/SubirTareaServlet" method="POST" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label text-warning">Título</label>
-                            <input type="text" name="titulo" class="form-control bg-dark text-white border-warning" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-warning">Descripción</label>
-                            <textarea name="descripcion" class="form-control bg-dark text-white border-warning" rows="2"></textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-warning">Semana</label>
-                                <select name="semanaId" class="form-select bg-dark text-white border-warning" required>
-                                    <% for (Semana s : semanas) { %>
-                                        <option value="<%= s.getId() %>"><%= s.getNombre() %></option>
-                                    <% } %>
-                                </select>
+        <!-- MODAL PARA SUBIR TAREA -->
+        <div class="modal fade" id="modalSubir" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="background-color: #1a1a1a; border: 2px solid #FFD700;">
+                    <div class="modal-header" style="border-bottom: 2px solid #FFD700;">
+                        <h5 class="modal-title text-warning">Subir Nueva Tarea</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="<%= ctx%>/SubirTareaServlet" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label class="form-label text-warning">Título</label>
+                                <input type="text" name="titulo" class="form-control bg-dark text-white border-warning" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-warning">Categoría</label>
-                                <select name="categoriaId" class="form-select bg-dark text-white border-warning">
-                                    <option value="1">Tarea</option>
-                                    <option value="2">Parcial</option>
-                                    <option value="3">Proyecto</option>
-                                </select>
+                            <div class="mb-3">
+                                <label class="form-label text-warning">Descripción</label>
+                                <textarea name="descripcion" class="form-control bg-dark text-white border-warning" rows="2"></textarea>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-warning">Archivo</label>
-                            <input type="file" name="archivo" class="form-control bg-dark text-white border-warning" required>
-                        </div>
-                        <div class="text-end">
-                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-warning fw-bold">Subir Tarea</button>
-                        </div>
-                    </form>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-warning">Semana</label>
+                                    <select name="semanaId" class="form-select bg-dark text-white border-warning" required>
+                                        <% for (Semana s : semanas) {%>
+                                        <option value="<%= s.getId()%>"><%= s.getNombre()%></option>
+                                        <% }%>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-warning">Categoría</label>
+                                    <select name="categoriaId" class="form-select bg-dark text-white border-warning">
+                                        <option value="1">Tarea</option>
+                                        <option value="2">Parcial</option>
+                                        <option value="3">Proyecto</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-warning">Archivo</label>
+                                <input type="file" name="archivo" class="form-control bg-dark text-white border-warning" required>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-warning fw-bold">Subir Tarea</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>

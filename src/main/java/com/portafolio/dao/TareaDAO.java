@@ -60,4 +60,18 @@ public class TareaDAO {
         return tareas;
     }
     
+    public boolean eliminarTarea(int id) {
+    String sql = "DELETE FROM tareas WHERE id = ?";
+    
+    try (Connection conn = ConexionDB.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setInt(1, id);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+    
 }
