@@ -2,12 +2,31 @@
 <%@ page import="com.portafolio.dao.TareaDAO" %>
 <%@ page import="com.portafolio.modelos.Tarea" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 
 <%
-    int semanaId = Integer.parseInt(request.getParameter("id"));
-    TareaDAO tareaDAO = new TareaDAO();
-    List<Tarea> tareas = tareaDAO.getTareasBySemanaId(semanaId);
-    String ctx = request.getContextPath(); // Agregado para rutas consistentes
+    String idParam = request.getParameter("id");
+    int semanaId = -1;
+    List<Tarea> tareas = new ArrayList<>();
+    String debugMensaje = "";
+
+    // 1. Diagnóstico seguro del ID
+    if (idParam != null && !idParam.trim().isEmpty()) {
+        try {
+            semanaId = Integer.parseInt(idParam);
+            TareaDAO tareaDAO = new TareaDAO();
+            tareas = tareaDAO.getTareasBySemanaId(semanaId);
+            
+            // Mensaje de éxito para el diagnóstico
+            debugMensaje = "✅ DEBUG: ID de semana recibido = <strong>" + semanaId + "</strong> | Tareas encontradas en la BD = <strong>" + tareas.size() + "</strong>";
+        } catch (NumberFormatException e) {
+            debugMensaje = "❌ ERROR: El parámetro 'id' no es un número válido. Valor recibido: '" + idParam + "'";
+        }
+    } else {
+        debugMensaje = "⚠️ ADVERTENCIA: No se recibió ningún parámetro 'id' en la URL. Revisa el enlace en tareas.jsp";
+    }
+    
+    String ctx = request.getContextPath();
 %>
 
 <!DOCTYPE html>
@@ -23,11 +42,18 @@
     
     <div class="page-header">
         <div class="container">
-            <h1>Tareas de la Semana <%= semanaId %></h1>
+            <h1>Tareas de la Semana <%= (semanaId != -1) ? semanaId : "Desconocida" %></h1>
         </div>
     </div>
     
     <div class="container">
+        <!-- CUADRO DE DIAGNÓSTICO (Lo borraremos cuando funcione) -->
+        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+            <%= debugMensaje %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- FIN DEL CUADRO DE DIAGNÓSTICO -->
+
         <% if (tareas == null || tareas.isEmpty()) { %>
             <div class="empty-state text-center py-5">
                 <h3>📂 Carpeta Vacía</h3>

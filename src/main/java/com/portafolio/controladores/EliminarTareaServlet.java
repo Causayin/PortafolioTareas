@@ -12,35 +12,33 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/EliminarTareaServlet")
 public class EliminarTareaServlet extends HttpServlet {
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        
-        // Verificar que sea admin
         if (session.getAttribute("usuario") == null) {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
             return;
         }
         
         String idParam = request.getParameter("id");
-        if (idParam != null) {
+        if (idParam != null && !idParam.trim().isEmpty()) {
             try {
                 int id = Integer.parseInt(idParam);
                 TareaDAO dao = new TareaDAO();
                 boolean eliminado = dao.eliminarTarea(id);
                 
                 if (eliminado) {
-                    // Redirigir a gestionar_tareas con mensaje de éxito
-                    response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?mensaje=eliminada");
+                    response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?mensaje=eliminada");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
+                    response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?error=fallo");
                 }
             } catch (NumberFormatException e) {
-                response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
+                response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?error=fallo");
             }
         } else {
-            response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp");
+            response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp");
         }
     }
 }
