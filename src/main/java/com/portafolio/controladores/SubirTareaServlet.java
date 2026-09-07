@@ -43,7 +43,7 @@ public class SubirTareaServlet extends HttpServlet {
         Part filePart = request.getPart("archivo");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         
-        // CORRECCIÓN 1: Asegurar que la ruta tenga slash correcto para que Tomcat lo sirva públicamente
+        // 1. Definir ruta de guardado
         String uploadPath = getServletContext().getRealPath("/") + "uploads/";
         Path uploadDir = Paths.get(uploadPath);
         
@@ -51,9 +51,19 @@ public class SubirTareaServlet extends HttpServlet {
             Files.createDirectories(uploadDir);
         }
         
+        // === LOGS DE DEPURACIÓN (Para ver en Render) ===
+        System.out.println("=== DEBUG UPLOAD PATH: " + uploadPath);
+        System.out.println("=== DEBUG UPLOAD DIR EXISTS: " + Files.exists(uploadDir));
+        
+        // 2. Guardar archivo
         Path filePath = uploadDir.resolve(fileName);
         Files.copy(filePart.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         
+        System.out.println("=== DEBUG FILE SAVED: " + filePath);
+        System.out.println("=== DEBUG FILE EXISTS: " + Files.exists(filePath));
+        // ===============================================
+        
+        // 3. Guardar en Base de Datos
         String sql = "INSERT INTO tareas (titulo, descripcion, archivo_nombre, archivo_ruta, semana_id, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = ConexionDB.getConnection();
@@ -62,20 +72,21 @@ public class SubirTareaServlet extends HttpServlet {
             ps.setString(1, titulo);
             ps.setString(2, descripcion);
             ps.setString(3, fileName);
-            ps.setString(4, "uploads/" + fileName); // Esta es la ruta relativa correcta para la web
+            ps.setString(4, "uploads/" + fileName); 
             ps.setInt(5, semanaId);
             ps.setInt(6, categoriaId);
             ps.setInt(7, usuario.getId());
             
             ps.executeUpdate();
+            System.out.println("=== DEBUG DB INSERT SUCCESS ===");
             
-            // CORRECCIÓN 2: Cambiar guion medio (-) por guion bajo (_)
-            response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?mensaje=exito");
+            // Redirect correcto según tu nombre de archivo (con guion medio)
+            response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?mensaje=exito");
             
         } catch (Exception e) {
+            System.out.println("=== DEBUG DB INSERT ERROR: " + e.getMessage());
             e.printStackTrace();
-            // CORRECCIÓN 2: Cambiar guion medio (-) por guion bajo (_)
-            response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
+            response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?error=fallo");
         }
     }
 }
