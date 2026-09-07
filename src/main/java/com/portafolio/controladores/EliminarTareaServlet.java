@@ -32,9 +32,9 @@ public class EliminarTareaServlet extends HttpServlet {
                 
                 if (eliminado) {
                     // Redirigir al panel admin con mensaje de éxito
-                    response.sendRedirect("AdminServlet?msg=eliminada");
+                    response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?mensaje=exito");
                 } else {
-                    response.sendRedirect("AdminServlet?msg=error");
+                    response.sendRedirect(request.getContextPath() + "/admin/gestionar_tareas.jsp?error=fallo");
                 }
             } catch (NumberFormatException e) {
                 response.sendRedirect("AdminServlet?msg=error");

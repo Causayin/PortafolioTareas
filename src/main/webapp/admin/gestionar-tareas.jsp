@@ -77,6 +77,47 @@
                         </a>
                     </div>
                 </div>
+                <div class="d-flex gap-2">
+                    <!-- Botón Vista Previa (solo para PDF e imágenes) -->
+                    <%
+                        String archivoRuta = t.getArchivoRuta();
+                        String ext = archivoRuta.substring(archivoRuta.lastIndexOf(".")).toLowerCase();
+                        boolean esVistaPrevia = ext.equals(".pdf") || ext.equals(".jpg") || ext.equals(".jpeg") || ext.equals(".png");
+                    %>
+                    <% if (esVistaPrevia) {%>
+                    <button type="button" class="btn btn-sm btn-info" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalVistaPrevia<%= t.getId()%>">
+                        👁️ Ver
+                    </button>
+
+                    <!-- Modal Vista Previa -->
+                    <div class="modal fade" id="modalVistaPrevia<%= t.getId()%>" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content bg-dark">
+                                <div class="modal-header border-warning">
+                                    <h5 class="modal-title text-warning"><%= t.getTitulo()%></h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <% if (ext.equals(".pdf")) {%>
+                                    <embed src="<%= ctx%>/<%= archivoRuta%>" type="application/pdf" width="100%" height="600px" />
+                                    <% } else {%>
+                                    <img src="<%= ctx%>/<%= archivoRuta%>" class="img-fluid" alt="<%= t.getTitulo()%>" />
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }%>
+
+                    <a href="<%= ctx%>/<%= archivoRuta%>" class="btn btn-sm btn-outline-warning" download>Descargar</a>
+                    <a href="<%= ctx%>/EliminarTareaServlet?id=<%= t.getId()%>" 
+                       class="btn btn-sm btn-danger" 
+                       onclick="return confirm('¿Eliminar esta tarea?');">
+                        🗑️ Eliminar
+                    </a>
+                </div>
                 <%
                         }
                     }
