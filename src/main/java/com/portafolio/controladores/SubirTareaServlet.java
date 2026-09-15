@@ -4,7 +4,9 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.portafolio.dao.ConexionDB;
 import com.portafolio.modelos.Usuario;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Map;
@@ -31,12 +33,14 @@ public class SubirTareaServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         
-        // Obtener credenciales de variables de entorno
         String cloudName = System.getenv("CLOUDINARY_CLOUD_NAME");
         String apiKey = System.getenv("CLOUDINARY_API_KEY");
         String apiSecret = System.getenv("CLOUDINARY_API_SECRET");
         
-        // Configurar Cloudinary
+        System.out.println("=== CLOUD_NAME: " + cloudName);
+        System.out.println("=== API_KEY: " + apiKey);
+        System.out.println("=== API_SECRET: " + (apiSecret != null ? "EXISTS" : "NULL"));
+        
         cloudinary = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", cloudName,
             "api_key", apiKey,
@@ -65,12 +69,26 @@ public class SubirTareaServlet extends HttpServlet {
         Part filePart = request.getPart("archivo");
         String fileName = filePart.getSubmittedFileName();
         
+        System.out.println("=== Subiendo archivo: " + fileName);
+        
         try {
-            System.out.println(" Subiendo archivo: " + fileName);
+            // === SOLUCIÓN: Convertir InputStream a byte array ===
+            InputStream inputStream = filePart.getInputStream();
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[16384];
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            byte[] fileBytes = buffer.toByteArray();
+            // ================================================
             
-            // Subir a Cloudinary
+            System.out.println("=== Archivo convertido a byte array: " + fileBytes.length + " bytes");
+            
+            // Subir a Cloudinary usando byte array
             Map uploadResult = cloudinary.uploader().upload(
-                filePart.getInputStream(),
+                fileBytes,
                 ObjectUtils.asMap(
                     "resource_type", "auto",
                     "public_id", fileName.replaceAll("\\.[^.]+$", "")
