@@ -53,6 +53,11 @@ public class SubirTareaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // === AGREGAR ESTO: Configurar encoding UTF-8 ===
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        // ================================================
+        
         HttpSession session = request.getSession();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         
@@ -72,7 +77,7 @@ public class SubirTareaServlet extends HttpServlet {
         System.out.println("=== Subiendo archivo: " + fileName);
         
         try {
-            // === SOLUCIÓN: Convertir InputStream a byte array ===
+            // Convertir InputStream a byte array
             InputStream inputStream = filePart.getInputStream();
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
             int nRead;
@@ -82,7 +87,6 @@ public class SubirTareaServlet extends HttpServlet {
             }
             buffer.flush();
             byte[] fileBytes = buffer.toByteArray();
-            // ================================================
             
             System.out.println("=== Archivo convertido a byte array: " + fileBytes.length + " bytes");
             

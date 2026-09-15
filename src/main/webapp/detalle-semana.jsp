@@ -79,20 +79,21 @@
                     </div>
                 </div>
 
-                <!-- MODAL DE VISTA PREVIA -->
+                <!-- MODAL DE VISTA PREVIA (CORREGIDO CON IFRAME) -->
                 <% if (esVistaPrevia) { %>
                 <div class="modal fade" id="modalVistaPrevia<%= t.getId() %>" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content bg-dark">
                             <div class="modal-header border-warning">
                                 <h5 class="modal-title text-warning"><%= t.getTitulo() %></h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
-                            <div class="modal-body text-center">
+                            <div class="modal-body text-center p-0" style="overflow: hidden; border-radius: 0 0 8px 8px;">
                                 <% if (ext.equals(".pdf")) { %>
-                                    <embed src="<%= archivoRuta %>" type="application/pdf" width="100%" height="600px" />
+                                    <!-- IFRAME es mucho más estable para PDFs de Cloudinary -->
+                                    <iframe src="<%= archivoRuta %>#toolbar=0" width="100%" height="600px" style="border: none;"></iframe>
                                 <% } else { %>
-                                    <img src="<%= archivoRuta %>" class="img-fluid" alt="<%= t.getTitulo() %>" />
+                                    <img src="<%= archivoRuta %>" class="img-fluid" alt="<%= t.getTitulo() %>" style="max-height: 600px; object-fit: contain;" />
                                 <% } %>
                             </div>
                         </div>

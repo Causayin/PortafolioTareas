@@ -30,9 +30,9 @@
     </head>
     <body>
         <!-- Navbar Admin Simplificado -->
-        <nav class="admin-navbar" style="background:#000; border-bottom:2px solid #FFD700; padding:15px;">
-            <div class="container-fluid d-flex justify-content-between">
-                <a class="navbar-brand text-warning" href="<%= ctx%>/AdminServlet">← Volver al Dashboard</a>
+        <nav class="admin-navbar">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="<%= ctx%>/AdminServlet">← Volver al Dashboard</a>
                 <h4 class="text-white m-0">Gestión de Tareas</h4>
                 <button class="btn btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#modalSubir">
                     + Añadir Tarea
@@ -50,7 +50,7 @@
             <% } %>
             <% if ("fallo".equals(request.getParameter("error"))) { %>
             <div class="alert alert-danger alert-dismissible fade show">
-                Error al subir la tarea.
+                ❌ Error al subir la tarea.
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <% } %>
@@ -91,7 +91,7 @@
                         <small>📅 <%= t.getFechaSubida()%> | 📄 <%= t.getArchivoNombre()%></small>
                     </div>
 
-                    <!-- BOTONES (una sola vez) -->
+                    <!-- BOTONES -->
                     <div class="d-flex gap-2 flex-wrap">
                         <% if (esVistaPrevia) {%>
                         <button type="button" class="btn btn-sm btn-info" 
@@ -112,20 +112,21 @@
                     </div>
                 </div>
 
-                <!-- MODAL DE VISTA PREVIA (fuera de tarea-item, pero dentro del bucle) -->
+                <!-- MODAL DE VISTA PREVIA (CORREGIDO CON IFRAME) -->
                 <% if (esVistaPrevia) {%>
                 <div class="modal fade" id="modalVistaPrevia<%= t.getId()%>" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content bg-dark">
                             <div class="modal-header border-warning">
                                 <h5 class="modal-title text-warning"><%= t.getTitulo()%></h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
-                            <div class="modal-body text-center">
+                            <div class="modal-body text-center p-0" style="overflow: hidden; border-radius: 0 0 8px 8px;">
                                 <% if (ext.equals(".pdf")) {%>
-                                <embed src="<%= archivoRuta%>" type="application/pdf" width="100%" height="600px" />
+                                <!-- IFRAME en lugar de EMBED para PDFs de Cloudinary -->
+                                <iframe src="<%= archivoRuta%>#toolbar=0" width="100%" height="600px" style="border: none;"></iframe>
                                 <% } else {%>
-                                <img src="<%= archivoRuta%>" class="img-fluid" alt="<%= t.getTitulo()%>" />
+                                <img src="<%= archivoRuta%>" class="img-fluid" alt="<%= t.getTitulo()%>" style="max-height: 600px; object-fit: contain;" />
                                 <% } %>
                             </div>
                         </div>
@@ -146,43 +147,42 @@
 
         <!-- MODAL PARA SUBIR TAREA -->
         <div class="modal fade" id="modalSubir" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="background-color: #1a1a1a; border: 2px solid #FFD700;">
-                    <div class="modal-header" style="border-bottom: 2px solid #FFD700;">
-                        <h5 class="modal-title text-warning">Subir Nueva Tarea</h5>
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Subir Nueva Tarea</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <form action="<%= ctx%>/SubirTareaServlet" method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
-                                <label class="form-label text-warning">Título</label>
-                                <input type="text" name="titulo" class="form-control bg-dark text-white border-warning" required>
+                                <label class="form-label">Título</label>
+                                <input type="text" name="titulo" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label text-warning">Descripción</label>
-                                <textarea name="descripcion" class="form-control bg-dark text-white border-warning" rows="2"></textarea>
+                                <label class="form-label">Descripción</label>
+                                <textarea name="descripcion" class="form-control" rows="2"></textarea>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-warning">Semana</label>
-                                    <select name="semanaId" class="form-select bg-dark text-white border-warning" required>
+                                    <label class="form-label">Semana</label>
+                                    <select name="semanaId" class="form-select" required>
                                         <% for (Semana s : semanas) {%>
                                         <option value="<%= s.getId()%>"><%= s.getNombre()%></option>
                                         <% }%>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-warning">Categoría</label>
-                                    <select name="categoriaId" class="form-select bg-dark text-white border-warning">
+                                    <label class="form-label">Categoría</label>
+                                    <select name="categoriaId" class="form-select">
                                         <option value="1">Tarea</option>
-                                        <option value="2">Parcial</option>
                                         <option value="3">Proyecto</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label text-warning">Archivo</label>
-                                <input type="file" name="archivo" class="form-control bg-dark text-white border-warning" required>
+                                <label class="form-label">Archivo</label>
+                                <input type="file" name="archivo" class="form-control" required>
                             </div>
                             <div class="text-end">
                                 <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
