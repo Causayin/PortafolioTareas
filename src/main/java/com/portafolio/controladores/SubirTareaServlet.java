@@ -28,8 +28,16 @@ public class SubirTareaServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        String cloudinaryUrl = System.getenv("CLOUDINARY_URL");
-        cloudinary = new Cloudinary(cloudinaryUrl);
+        // Leemos las 3 variables por separado (mucho más seguro)
+        String cloudName = System.getenv("CLOUDINARY_CLOUD_NAME");
+        String apiKey = System.getenv("CLOUDINARY_API_KEY");
+        String apiSecret = System.getenv("CLOUDINARY_API_SECRET");
+        
+        cloudinary = new Cloudinary(ObjectUtils.asMap(
+            "cloud_name", cloudName,
+            "api_key", apiKey,
+            "api_secret", apiSecret
+        ));
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -52,23 +60,21 @@ public class SubirTareaServlet extends HttpServlet {
         String fileName = filePart.getSubmittedFileName();
 
         try {
-            // === CORRECCIÓN AQUÍ ===
-            // Subir a Cloudinary con opciones explícitas
+            // Opciones correctas para subir a Cloudinary
             Map uploadOptions = ObjectUtils.asMap(
                 "resource_type", "auto",
-                "public_id", fileName.replaceAll("\\.[^.]+$", "") // Quitar extensión del nombre
+                "public_id", fileName.replaceAll("\\.[^.]+$", "") 
             );
             
             Map uploadResult = cloudinary.uploader().upload(
                 filePart.getInputStream(),
                 uploadOptions
             );
-            // ========================
 
             String archivoUrl = (String) uploadResult.get("secure_url");
-            System.out.println("=== CLOUDINARY UPLOAD SUCCESS: " + archivoUrl);
+            System.out.println("✅ CLOUDINARY UPLOAD SUCCESS: " + archivoUrl);
 
-            // Guardar en BD
+            // Guardar en la Base de Datos
             String sql = "INSERT INTO tareas (titulo, descripcion, archivo_nombre, archivo_ruta, semana_id, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             try (Connection conn = ConexionDB.getConnection();
@@ -77,7 +83,7 @@ public class SubirTareaServlet extends HttpServlet {
                 ps.setString(1, titulo);
                 ps.setString(2, descripcion);
                 ps.setString(3, fileName);
-                ps.setString(4, archivoUrl);
+                ps.setString(4, archivoUrl); // Guardamos la URL de Cloudinary
                 ps.setInt(5, semanaId);
                 ps.setInt(6, categoriaId);
                 ps.setInt(7, usuario.getId());
@@ -88,7 +94,7 @@ public class SubirTareaServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?mensaje=exito");
 
         } catch (Exception e) {
-            System.out.println("=== ERROR AL SUBIR A CLOUDINARY: " + e.getMessage());
+            System.out.println("❌ ERROR AL SUBIR A CLOUDINARY: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?error=fallo");
         }
