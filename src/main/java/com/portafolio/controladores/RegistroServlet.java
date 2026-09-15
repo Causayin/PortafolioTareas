@@ -15,31 +15,47 @@ public class RegistroServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // 1. Obtener datos del formulario
         String nombre = request.getParameter("nombre");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         
-        if (!password.equals(confirmPassword)) {
-            response.sendRedirect("index.jsp?error=pass_no_coincide");
+        // 2. Validaciones básicas
+        if (nombre == null || email == null || password == null || 
+            nombre.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/index.jsp?error=campos_vacios");
             return;
         }
         
+        if (!password.equals(confirmPassword)) {
+            response.sendRedirect(request.getContextPath() + "/index.jsp?error=pass_no_coincide");
+            return;
+        }
+        
+        // 3. Crear objeto Usuario
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setEmail(email);
-        usuario.setPassword(password);
+        usuario.setPassword(password); // El DAO se encarga de encriptarlo con MD5 en la BD
         
+        // 4. Guardar en la Base de Datos
         UsuarioDAO dao = new UsuarioDAO();
         
         try {
-            if (dao.registrarUsuario(usuario)) {
-                response.sendRedirect("index.jsp?exito=registro_ok");
+            boolean registrado = dao.registrarUsuario(usuario);
+            
+            if (registrado) {
+                // Éxito: Redirigir al login con mensaje de éxito
+                response.sendRedirect(request.getContextPath() + "/index.jsp?exito=registro_ok");
             } else {
-                response.sendRedirect("index.jsp?error=email_existe");
+                // Fallo: Probablemente el email ya existe (el DAO lo maneja)
+                response.sendRedirect(request.getContextPath() + "/index.jsp?error=email_existe");
             }
         } catch (Exception e) {
-            response.sendRedirect("index.jsp?error=registro_fallido");
+            System.out.println("ERROR EN REGISTRO: " + e.getMessage());
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/index.jsp?error=registro_fallido");
         }
     }
 }

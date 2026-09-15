@@ -73,7 +73,7 @@
                             </button>
                         <% } %>
                         
-                        <a href="<%= ctx %>/<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download>
+                        <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download>
                             ⬇️ Descargar: <%= t.getArchivoNombre() %>
                         </a>
                     </div>
@@ -90,9 +90,9 @@
                             </div>
                             <div class="modal-body text-center">
                                 <% if (ext.equals(".pdf")) { %>
-                                    <embed src="<%= ctx %>/<%= archivoRuta %>" type="application/pdf" width="100%" height="600px" />
+                                    <embed src="<%= archivoRuta %>" type="application/pdf" width="100%" height="600px" />
                                 <% } else { %>
-                                    <img src="<%= ctx %>/<%= archivoRuta %>" class="img-fluid" alt="<%= t.getTitulo() %>" />
+                                    <img src="<%= archivoRuta %>" class="img-fluid" alt="<%= t.getTitulo() %>" />
                                 <% } %>
                             </div>
                         </div>

@@ -12,15 +12,14 @@ public class UsuarioDAO {
 
     public Usuario validarLogin(String email, String password) {
         String sql = "SELECT * FROM usuarios WHERE email = ? AND password = MD5(?)";
-        
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, email);
             ps.setString(2, password);
-            
+
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 Usuario usuario = new Usuario();
                 usuario.setId(rs.getInt("id"));
@@ -37,30 +36,29 @@ public class UsuarioDAO {
     }
 
     public boolean registrarUsuario(Usuario usuario) {
+        // ¡OJO AQUÍ! El MD5(?) es lo que encripta la contraseña en la base de datos
         String sql = "INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, MD5(?), 'usuario')";
-        
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, usuario.getNombre());
             ps.setString(2, usuario.getEmail());
-            ps.setString(3, usuario.getPassword());
-            
+            ps.setString(3, usuario.getPassword()); // Se pasa en texto plano, MySQL la encripta
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Si el email ya existe, SQL lanza un error de clave duplicada
+            System.out.println("Error al registrar (posible email duplicado): " + e.getMessage());
+            return false;
         }
-        return false;
     }
-    
+
     public List<Usuario> getAllUsuarios() {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuarios ORDER BY id DESC";
-        
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            
+
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 Usuario u = new Usuario();
                 u.setId(rs.getInt("id"));
@@ -70,22 +68,21 @@ public class UsuarioDAO {
                 u.setFechaRegistro(rs.getString("fecha_registro"));
                 lista.add(u);
             }
-        } catch (SQLException e) { 
-            e.printStackTrace(); 
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return lista;
     }
 
     public boolean actualizarUsuario(Usuario usuario) {
         String sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?";
-        
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
+        try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, usuario.getNombre());
             ps.setString(2, usuario.getEmail());
             ps.setInt(3, usuario.getId());
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

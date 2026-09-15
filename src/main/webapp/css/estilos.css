@@ -1,9 +1,23 @@
-/* ============================================
-   ESTILOS GLOBALES - PORTAFOLIO TAREAS
-   Colores: Amarillo (#FFD700) y Negro (#0a0a0a)
-   ============================================ */
+/* ==========================================================================
+   PORTAFOLIO TAREAS - HOJA DE ESTILOS PRINCIPAL
+   Tema: Dark Mode con acentos Dorados (#FFD700)
+   ========================================================================== */
 
-/* --- RESET Y BASE --- */
+/* ==========================================================================
+   1. VARIABLES Y CONFIGURACIÓN GLOBAL
+   ========================================================================== */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #222222;
+    --color-primary: #FFD700;       /* Dorado principal */
+    --color-primary-hover: #FFA500; /* Dorado/Naranja para hover */
+    --color-text: #ffffff;
+    --color-text-muted: #cccccc;
+    --border-radius: 15px;
+    --transition: all 0.3s ease;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -12,74 +26,75 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #0a0a0a;
-    color: #ffffff;
+    background-color: var(--bg-primary);
+    color: var(--color-text);
     line-height: 1.6;
 }
 
-/* --- NAVBAR --- */
-.navbar-custom {
+/* ==========================================================================
+   2. NAVEGACIÓN (NAVBAR)
+   ========================================================================== */
+.navbar-custom, .admin-navbar {
     background-color: #000000;
-    border-bottom: 2px solid #FFD700;
+    border-bottom: 2px solid var(--color-primary);
     padding: 15px 0;
 }
 
 .navbar-custom .navbar-brand,
-.navbar-custom .nav-link {
-    color: #FFD700 !important;
-    font-weight: 500;
-    transition: color 0.3s ease;
+.navbar-custom .nav-link,
+.admin-navbar .navbar-brand {
+    color: var(--color-primary) !important;
+    font-weight: 600;
+    transition: var(--transition);
 }
 
-.navbar-custom .nav-link:hover {
+.navbar-custom .nav-link:hover,
+.admin-navbar .nav-link:hover {
     color: #ffffff !important;
 }
 
-/* --- HERO / PAGE HEADER --- */
-.hero-section,
-.page-header {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #000000 100%);
+/* ==========================================================================
+   3. ENCABEZADOS Y HERO
+   ========================================================================== */
+.hero-section, .page-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 50%, #000000 100%);
     padding: 80px 0;
     text-align: center;
     margin-bottom: 50px;
 }
 
-.hero-section h1,
-.page-header h1 {
+.hero-section h1, .page-header h1 {
     color: #000000;
     font-weight: 700;
     font-size: 3rem;
     margin-bottom: 10px;
 }
 
-.hero-section p,
-.page-header p {
+.hero-section p, .page-header p {
     color: #000000;
     font-size: 1.3rem;
     font-weight: 300;
 }
 
-/* --- CARDS GLOBALES --- */
-.card-custom,
-.semana-card,
-.tarea-card,
-.profile-card {
-    background-color: #1a1a1a;
-    border: 2px solid #FFD700;
-    border-radius: 15px;
+/* ==========================================================================
+   4. TARJETAS (CARDS) GLOBALES
+   ========================================================================== */
+.card-custom, .semana-card, .tarea-card, .profile-card, .action-card {
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius);
     padding: 30px;
     margin-bottom: 30px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
-.card-custom:hover,
-.semana-card:hover {
+.card-custom:hover, .semana-card:hover, .action-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
 }
 
 .tarea-card {
-    border-left: 5px solid #FFD700;
+    border-left: 5px solid var(--color-primary);
 }
 
 .tarea-card:hover {
@@ -87,29 +102,84 @@ body {
     box-shadow: -5px 5px 20px rgba(255, 215, 0, 0.2);
 }
 
-.card-custom h2,
-.semana-card h3,
-.tarea-card h4,
-.profile-card h2 {
-    color: #FFD700;
+.card-custom h2, .semana-card h3, .tarea-card h4, .profile-card h2, .action-card h4 {
+    color: var(--color-primary);
     font-weight: 600;
     margin-bottom: 20px;
-    border-bottom: 2px solid #FFD700;
+    border-bottom: 2px solid var(--color-primary);
     padding-bottom: 10px;
 }
 
-.card-custom p,
-.tarea-card p {
-    color: #cccccc;
+.card-custom p, .tarea-card p, .action-card p {
+    color: var(--color-text-muted);
     line-height: 1.8;
 }
 
-/* --- BOTONES --- */
-.btn-custom,
-.btn-ver-tareas,
-.btn-descargar,
-.btn-editar {
-    background-color: #FFD700;
+/* ==========================================================================
+   5. GESTIÓN DE TAREAS (VISTA ADMIN)
+   ========================================================================== */
+.semana-separator {
+    background-color: var(--bg-tertiary);
+    border-left: 5px solid var(--color-primary);
+    padding: 15px 20px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-radius: 0 10px 10px 0;
+}
+
+.semana-separator h3 { 
+    color: var(--color-primary); 
+    margin: 0; 
+    font-size: 1.5rem; 
+}
+
+.tarea-item {
+    background-color: var(--bg-secondary);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.tarea-item:hover { 
+    border-color: var(--color-primary); 
+}
+
+.tarea-info h5 { color: #fff; margin: 0 0 5px 0; font-size: 1.1rem; }
+.tarea-info p { color: #aaa; margin: 0; font-size: 0.9rem; }
+.tarea-info small { color: #666; }
+
+/* ==========================================================================
+   6. FORMULARIOS Y BOTONES
+   ========================================================================== */
+.form-control, .form-select {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-text);
+    padding: 12px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2a2a;
+    border-color: var(--color-primary-hover);
+    color: var(--color-text);
+    box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+}
+
+.form-label {
+    color: var(--color-primary);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.btn-custom, .btn-ver-tareas, .btn-descargar, .btn-editar, .btn-admin {
+    background-color: var(--color-primary);
     color: #000000;
     font-weight: 600;
     padding: 12px 30px;
@@ -117,54 +187,143 @@ body {
     border-radius: 25px;
     text-decoration: none;
     display: inline-block;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     cursor: pointer;
 }
 
-.btn-custom:hover,
-.btn-ver-tareas:hover,
-.btn-descargar:hover,
-.btn-editar:hover {
-    background-color: #FFA500;
-    color: #000000;
+.btn-custom:hover, .btn-ver-tareas:hover, .btn-descargar:hover, .btn-editar:hover, .btn-admin:hover {
+    background-color: var(--color-primary-hover);
     transform: scale(1.05);
 }
 
 .btn-volver {
     background-color: transparent;
-    color: #FFD700;
-    border: 2px solid #FFD700;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
     font-weight: 600;
     padding: 10px 25px;
     border-radius: 25px;
     text-decoration: none;
     display: inline-block;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .btn-volver:hover {
-    background-color: #FFD700;
+    background-color: var(--color-primary);
     color: #000000;
 }
 
-/* --- PERFIL --- */
+/* ==========================================================================
+   7. MODALES (LOGIN / REGISTRO) - DISEÑO SPLIT
+   ========================================================================== */
+.modal-auth .modal-dialog {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.modal-auth .modal-content {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, #2d2d2d 100%);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+}
+
+.modal-auth .modal-header {
+    border-bottom: 2px solid var(--color-primary);
+    padding: 1.5rem;
+}
+
+.modal-auth .modal-title {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.modal-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.modal-split .modal-image {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-split .modal-image::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.05) 10px, rgba(255, 255, 255, 0.05) 20px);
+    animation: slide 20s linear infinite;
+}
+
+@keyframes slide {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.modal-split .modal-image-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #000000;
+}
+
+.modal-split .modal-image-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.modal-split .modal-form {
+    padding: 2.5rem;
+}
+
+.modal-center {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 4rem);
+}
+
+.auth-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive para modales */
+@media (max-width: 768px) {
+    .modal-split { grid-template-columns: 1fr; }
+    .modal-split .modal-image { display: none; }
+    .modal-auth .modal-dialog { margin: 1rem; max-width: 100%; }
+}
+
+/* ==========================================================================
+   8. PERFIL DE USUARIO Y ESTADÍSTICAS
+   ========================================================================== */
 .info-item {
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #222222;
+    background-color: var(--bg-tertiary);
     border-radius: 8px;
-    border-left: 3px solid #FFD700;
+    border-left: 3px solid var(--color-primary);
 }
 
 .info-item label {
-    color: #FFD700;
+    color: var(--color-primary);
     font-weight: 600;
     display: block;
     margin-bottom: 5px;
 }
 
 .info-item span {
-    color: #cccccc;
+    color: var(--color-text-muted);
     font-size: 1.1rem;
 }
 
@@ -176,176 +335,10 @@ body {
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 25px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.stat-card h3 {
-    color: #000000;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.stat-card p {
-    color: #000000;
-    font-weight: 600;
-    margin: 0;
-}
-
-/* --- EMPTY STATE --- */
-.empty-state {
-    background-color: #1a1a1a;
-    border: 2px dashed #FFD700;
-    border-radius: 15px;
-    padding: 50px;
-    text-align: center;
-    color: #cccccc;
-}
-
-.empty-state h3 {
-    color: #FFD700;
-    margin-bottom: 15px;
-}
-
-/* --- LOGIN/REGISTRO --- */
-.auth-container {
-    max-width: 500px;
-    margin: 50px auto;
-}
-
-.auth-card {
-    background-color: #1a1a1a;
-    border: 2px solid #FFD700;
-    border-radius: 15px;
-    padding: 40px;
-}
-
-.auth-card h3 {
-    color: #FFD700;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.form-control,
-.form-select {
-    background-color: #222222;
-    border: 1px solid #FFD700;
-    color: #ffffff;
-    padding: 12px;
-    border-radius: 8px;
-}
-
-.form-control:focus,
-.form-select:focus {
-    background-color: #2a2a2a;
-    border-color: #FFA500;
-    color: #ffffff;
-    box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
-}
-
-.form-label {
-    color: #FFD700;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-/* --- ALERTAS --- */
-.alert-success {
-    background-color: #1a1a1a;
-    border: 1px solid #FFD700;
-    color: #FFD700;
-}
-
-.alert-danger {
-    background-color: #1a1a1a;
-    border: 1px solid #ff4444;
-    color: #ff4444;
-}
-
-.alert-info {
-    background-color: #1a1a1a;
-    border: 2px dashed #FFD700;
-    color: #cccccc;
-}
-
-/* --- MODALES --- */
-.modal-content {
-    background-color: #1a1a1a;
-    border: 2px solid #FFD700;
-    border-radius: 15px;
-}
-
-.modal-header {
-    border-bottom: 2px solid #FFD700;
-    background-color: #222222;
-}
-
-.modal-title {
-    color: #FFD700;
-    font-weight: 600;
-}
-
-.modal-body {
-    color: #cccccc;
-}
-
-.modal-footer {
-    border-top: 2px solid #FFD700;
-    background-color: #222222;
-}
-
-.btn-close {
-    filter: invert(1);
-}
-
-/* ============================================
-   ESTILOS DEL PANEL DE ADMINISTRACIÓN
-   ============================================ */
-
-.admin-header {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    padding: 40px 0;
-    margin-bottom: 40px;
-}
-
-.admin-header h1 {
-    color: #000000;
-    font-weight: 700;
-    margin: 0;
-}
-
-.admin-sidebar {
-    background-color: #1a1a1a;
-    border-right: 2px solid #FFD700;
-    min-height: calc(100vh - 200px);
-    padding: 20px;
-}
-
-.admin-sidebar .nav-link {
-    color: #cccccc;
-    padding: 12px 20px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    border-left: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.admin-sidebar .nav-link:hover,
-.admin-sidebar .nav-link.active {
-    background-color: #222222;
-    color: #FFD700;
-    border-left-color: #FFD700;
-}
-
-.stat-card {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
     padding: 30px;
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .stat-card h3 {
@@ -361,93 +354,61 @@ body {
     margin: 5px 0 0 0;
 }
 
-.action-card {
-    background-color: #1a1a1a;
-    border: 2px solid #FFD700;
-    border-radius: 15px;
-    padding: 30px;
-    text-align: center;
-    transition: all 0.3s ease;
-    height: 100%;
+/* ==========================================================================
+   9. PANEL DE ADMINISTRACIÓN (SIDEBAR Y LAYOUT)
+   ========================================================================== */
+.admin-sidebar {
+    background-color: var(--bg-secondary);
+    border-right: 2px solid var(--color-primary);
+    min-height: calc(100vh - 200px);
+    padding: 20px;
 }
 
-.action-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-}
-
-.action-card h4 {
-    color: #FFD700;
-    margin-bottom: 15px;
-}
-
-.action-card p {
-    color: #cccccc;
-    margin-bottom: 20px;
-}
-
-.btn-admin {
-    background-color: #FFD700;
-    color: #000000;
-    font-weight: 600;
-    padding: 10px 25px;
-    border: none;
-    border-radius: 25px;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn-admin:hover {
-    background-color: #FFA500;
-    color: #000000;
-}
-
-.admin-navbar {
-    background-color: #000000;
-    border-bottom: 2px solid #FFD700;
-    padding: 15px 0;
-}
-
-.admin-navbar .navbar-brand {
-    color: #FFD700 !important;
-    font-weight: 700;
-    text-decoration: none;
-}
-
-.admin-navbar .nav-link {
-    color: #cccccc !important;
-    text-decoration: none;
-    margin-left: 15px;
-}
-
-.admin-navbar .nav-link:hover {
-    color: #FFD700 !important;
-}
-
-/* ... tus estilos anteriores ... */
-
-/* Estilos específicos para la vista de gestión de tareas */
-.semana-separator {
-    background-color: #222222;
-    border-left: 5px solid #FFD700;
-    padding: 15px 20px;
-    margin-top: 30px;
-    margin-bottom: 15px;
-    border-radius: 0 10px 10px 0;
-}
-.semana-separator h3 { color: #FFD700; margin: 0; font-size: 1.5rem; }
-
-.tarea-item {
-    background-color: #1a1a1a;
-    border: 1px solid #333;
+.admin-sidebar .nav-link {
+    color: var(--color-text-muted);
+    padding: 12px 20px;
+    margin-bottom: 8px;
     border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-left: 3px solid transparent;
+    transition: var(--transition);
 }
-.tarea-item:hover { border-color: #FFD700; }
-.tarea-info h5 { color: #fff; margin: 0 0 5px 0; font-size: 1.1rem; }
-.tarea-info p { color: #aaa; margin: 0; font-size: 0.9rem; }
-.tarea-info small { color: #666; }
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+    background-color: var(--bg-tertiary);
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+}
+
+/* ==========================================================================
+   10. UTILIDADES Y ESTADOS (ALERTAS, EMPTY STATE)
+   ========================================================================== */
+.empty-state {
+    background-color: var(--bg-secondary);
+    border: 2px dashed var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: 50px;
+    text-align: center;
+    color: var(--color-text-muted);
+}
+
+.empty-state h3 {
+    color: var(--color-primary);
+    margin-bottom: 15px;
+}
+
+.alert-success {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.alert-danger {
+    background-color: var(--bg-secondary);
+    border: 1px solid #ff4444;
+    color: #ff4444;
+}
+
+.btn-close {
+    filter: invert(1);
+}
