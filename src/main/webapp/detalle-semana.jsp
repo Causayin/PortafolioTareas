@@ -6,24 +6,18 @@
 
 <%
     String idParam = request.getParameter("id");
-    int semanaId = -1;
+    int semanaId = 0;
     List<Tarea> tareas = new ArrayList<>();
-    String debugMensaje = "";
-
-    // 1. Diagnóstico seguro del ID
+    
+    // Obtener las tareas de forma segura
     if (idParam != null && !idParam.trim().isEmpty()) {
         try {
             semanaId = Integer.parseInt(idParam);
             TareaDAO tareaDAO = new TareaDAO();
             tareas = tareaDAO.getTareasBySemanaId(semanaId);
-            
-            // Mensaje de éxito para el diagnóstico
-            debugMensaje = "✅ DEBUG: ID de semana recibido = <strong>" + semanaId + "</strong> | Tareas encontradas en la BD = <strong>" + tareas.size() + "</strong>";
         } catch (NumberFormatException e) {
-            debugMensaje = "❌ ERROR: El parámetro 'id' no es un número válido. Valor recibido: '" + idParam + "'";
+            // Si el ID no es válido, se mantiene en 0 y no mostrará tareas
         }
-    } else {
-        debugMensaje = "⚠️ ADVERTENCIA: No se recibió ningún parámetro 'id' en la URL. Revisa el enlace en tareas.jsp";
     }
     
     String ctx = request.getContextPath();
@@ -42,18 +36,11 @@
     
     <div class="page-header">
         <div class="container">
-            <h1>Tareas de la Semana <%= (semanaId != -1) ? semanaId : "Desconocida" %></h1>
+            <h1>Tareas de la Semana <%= semanaId %></h1>
         </div>
     </div>
     
     <div class="container">
-        <!-- CUADRO DE DIAGNÓSTICO (Lo borraremos cuando funcione) -->
-        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
-            <%= debugMensaje %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <!-- FIN DEL CUADRO DE DIAGNÓSTICO -->
-
         <% if (tareas == null || tareas.isEmpty()) { %>
             <div class="empty-state text-center py-5">
                 <h3>📂 Carpeta Vacía</h3>
@@ -92,7 +79,7 @@
                     </div>
                 </div>
 
-                <!-- MODAL DE VISTA PREVIA (Fuera de la tarjeta, pero dentro del bucle) -->
+                <!-- MODAL DE VISTA PREVIA -->
                 <% if (esVistaPrevia) { %>
                 <div class="modal fade" id="modalVistaPrevia<%= t.getId() %>" tabindex="-1">
                     <div class="modal-dialog modal-lg">
