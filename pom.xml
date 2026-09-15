@@ -46,8 +46,6 @@
             <scope>provided</scope>
         </dependency>
         
-        <!-- Cloudinary -->
-        <!-- Cloudinary -->
         <dependency>
             <groupId>com.cloudinary</groupId>
             <artifactId>cloudinary-http44</artifactId>
