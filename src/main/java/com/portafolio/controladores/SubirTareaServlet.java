@@ -53,10 +53,9 @@ public class SubirTareaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // === AGREGAR ESTO: Configurar encoding UTF-8 ===
+        // Configurar encoding UTF-8
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        // ================================================
         
         HttpSession session = request.getSession();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -74,7 +73,13 @@ public class SubirTareaServlet extends HttpServlet {
         Part filePart = request.getPart("archivo");
         String fileName = filePart.getSubmittedFileName();
         
-        System.out.println("=== Subiendo archivo: " + fileName);
+        // Obtener extensión del archivo
+        String ext = "";
+        if (fileName != null && fileName.contains(".")) {
+            ext = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        }
+        
+        System.out.println("=== Subiendo archivo: " + fileName + " (Ext: " + ext + ")");
         
         try {
             // Convertir InputStream a byte array
@@ -90,17 +95,42 @@ public class SubirTareaServlet extends HttpServlet {
             
             System.out.println("=== Archivo convertido a byte array: " + fileBytes.length + " bytes");
             
-            // Subir a Cloudinary usando byte array
+            // Determinar el resource_type según la extensión
+            String resourceType = "raw"; // Para PDFs y otros archivos
+            if (ext.equals(".jpg") || ext.equals(".jpeg") || ext.equals(".png") || ext.equals(".gif") || ext.equals(".webp")) {
+                resourceType = "image";
+            } else if (ext.equals(".mp4") || ext.equals(".webm") || ext.equals(".mov")) {
+                resourceType = "video";
+            }
+            
+            System.out.println("=== Resource Type: " + resourceType);
+            
+            // Subir a Cloudinary
             Map uploadResult = cloudinary.uploader().upload(
                 fileBytes,
                 ObjectUtils.asMap(
-                    "resource_type", "auto",
-                    "public_id", fileName.replaceAll("\\.[^.]+$", "")
+                    "resource_type", resourceType,
+                    "public_id", fileName.replaceAll("\\.[^.]+$", ""),
+                    "access_mode", "public"
                 )
             );
             
-            String archivoUrl = (String) uploadResult.get("secure_url");
-            System.out.println("✅ Subido a Cloudinary: " + archivoUrl);
+            // Generar la URL CORRECTA según el tipo de recurso
+            String archivoUrl = "";
+            String publicId = fileName.replaceAll("\\.[^.]+$", "");
+            
+            if (resourceType.equals("raw")) {
+                // Para PDFs: usar URL de raw
+                archivoUrl = cloudinary.url().resourceType("raw").generate(publicId);
+            } else if (resourceType.equals("video")) {
+                // Para videos: usar URL de video
+                archivoUrl = cloudinary.url().resourceType("video").generate(publicId);
+            } else {
+                // Para imágenes: usar secure_url del upload
+                archivoUrl = (String) uploadResult.get("secure_url");
+            }
+            
+            System.out.println("✅ URL generada: " + archivoUrl);
             
             // Guardar en base de datos
             String sql = "INSERT INTO tareas (titulo, descripcion, archivo_nombre, archivo_ruta, semana_id, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
