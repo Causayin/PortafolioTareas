@@ -66,39 +66,20 @@
                     <!-- Botones de acción -->
                     <div class="d-flex gap-2 flex-wrap mt-3">
                         <% if (esVistaPrevia) { %>
-                            <button type="button" class="btn btn-sm btn-info" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modalVistaPrevia<%= t.getId() %>">
-                                👁️ Ver
-                            </button>
+                            <!-- CAMBIO 1: Abrir en nueva pestaña (target="_blank") sin ctx -->
+                            <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
+                                👁️ Ver en nueva pestaña
+                            </a>
                         <% } %>
                         
-                        <a href="<%= ctx %>/<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download>
+                        <!-- CAMBIO 2: Quitar ctx de la descarga -->
+                        <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download>
                             ⬇️ Descargar: <%= t.getArchivoNombre() %>
                         </a>
                     </div>
                 </div>
-
-                <!-- MODAL DE VISTA PREVIA -->
-                <% if (esVistaPrevia) { %>
-                <div class="modal fade" id="modalVistaPrevia<%= t.getId() %>" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content bg-dark">
-                            <div class="modal-header border-warning">
-                                <h5 class="modal-title text-warning"><%= t.getTitulo() %></h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                                <% if (ext.equals(".pdf")) { %>
-                                    <embed src="<%= ctx %>/<%= archivoRuta %>" type="application/pdf" width="100%" height="600px" />
-                                <% } else { %>
-                                    <img src="<%= ctx %>/<%= archivoRuta %>" class="img-fluid" alt="<%= t.getTitulo() %>" />
-                                <% } %>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <% } %>
+                
+                <!-- (EL MODAL SE ELIMINÓ POR COMPLETO PARA EVITAR ERRORES CON CLOUDINARY) -->
                 
             <% } %>
         <% } %>

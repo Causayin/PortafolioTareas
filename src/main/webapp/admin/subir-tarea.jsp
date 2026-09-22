@@ -23,86 +23,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="<%= ctx %>/css/estilos.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #0a0a0a;
-            color: #ffffff;
-        }
-        
-        .admin-navbar {
-            background-color: #000000;
-            border-bottom: 2px solid #FFD700;
-            padding: 15px 0;
-        }
-        
-        .admin-navbar .navbar-brand {
-            color: #FFD700 !important;
-            font-weight: 700;
-            text-decoration: none;
-        }
-        
-        .admin-navbar .nav-link {
-            color: #cccccc !important;
-            text-decoration: none;
-            margin-left: 15px;
-        }
-        
-        .admin-navbar .nav-link:hover {
-            color: #FFD700 !important;
-        }
-        
-        .form-container {
-            max-width: 700px;
-            margin: 50px auto;
-            background-color: #1a1a1a;
-            border: 2px solid #FFD700;
-            border-radius: 15px;
-            padding: 40px;
-        }
-        
-        .form-container h2 {
-            color: #FFD700;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .form-label {
-            color: #FFD700;
-            font-weight: 500;
-        }
-        
-        .form-control,
-        .form-select {
-            background-color: #222222;
-            border: 1px solid #FFD700;
-            color: #ffffff;
-        }
-        
-        .form-control:focus,
-        .form-select:focus {
-            background-color: #2a2a2a;
-            border-color: #FFA500;
-            color: #ffffff;
-            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
-        }
-        
-        .btn-submit {
-            background-color: #FFD700;
-            color: #000000;
-            font-weight: 600;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .btn-submit:hover {
-            background-color: #FFA500;
-            color: #000000;
-        }
-    </style>
 </head>
 <body>
     <!-- Navbar Admin -->
@@ -112,7 +32,7 @@
                 <a class="navbar-brand" href="<%= ctx %>/AdminServlet">📊 Panel de Administración</a>
                 <div>
                     <a class="nav-link d-inline" href="<%= ctx %>/index.jsp">🏠 Ver Sitio</a>
-                    <a class="nav-link d-inline" href="<%= ctx %>/LogoutServlet"> Cerrar Sesión</a>
+                    <a class="nav-link d-inline" href="<%= ctx %>/LogoutServlet">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
