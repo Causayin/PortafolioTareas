@@ -14,7 +14,8 @@ public class TareaDAO {
         List<Tarea> tareas = new ArrayList<>();
         String sql = "SELECT * FROM tareas WHERE semana_id = ?";
 
-        try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionDB.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, semanaId);
             ResultSet rs = ps.executeQuery();
@@ -27,6 +28,7 @@ public class TareaDAO {
                 t.setArchivoNombre(rs.getString("archivo_nombre"));
                 t.setArchivoRuta(rs.getString("archivo_ruta"));
                 t.setFechaSubida(rs.getString("fecha_subida"));
+                t.setSemanaId(rs.getInt("semana_id"));
                 tareas.add(t);
             }
         } catch (SQLException e) {
@@ -60,18 +62,45 @@ public class TareaDAO {
         return tareas;
     }
     
-    public boolean eliminarTarea(int id) {
-    String sql = "DELETE FROM tareas WHERE id = ?";
-    
-    try (Connection conn = ConexionDB.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        
-        ps.setInt(1, id);
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
+    // === NUEVO MÉTODO AGREGADO ===
+    public Tarea getTareaById(int id) {
+        String sql = "SELECT * FROM tareas WHERE id = ?";
+        Tarea tarea = null;
+
+        try (Connection conn = ConexionDB.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                tarea = new Tarea();
+                tarea.setId(rs.getInt("id"));
+                tarea.setTitulo(rs.getString("titulo"));
+                tarea.setDescripcion(rs.getString("descripcion"));
+                tarea.setArchivoNombre(rs.getString("archivo_nombre"));
+                tarea.setArchivoRuta(rs.getString("archivo_ruta"));
+                tarea.setFechaSubida(rs.getString("fecha_subida"));
+                tarea.setSemanaId(rs.getInt("semana_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tarea;
     }
-    return false;
-}
+    // =============================
     
+    public boolean eliminarTarea(int id) {
+        String sql = "DELETE FROM tareas WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
