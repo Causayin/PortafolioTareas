@@ -49,7 +49,6 @@
         <% } else { %>
             
             <% for (Tarea t : tareas) { 
-                // === CORRECCIÓN: Detectar extensión del archivo_nombre, NO de archivo_ruta ===
                 String archivoRuta = t.getArchivoRuta();
                 String archivoNombre = t.getArchivoNombre();
                 
@@ -69,12 +68,12 @@
                     <div class="d-flex gap-2 flex-wrap mt-3">
                         <% if (esVistaPrevia) { %>
                             <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
-                                👁️ Ver en nueva pestaña
+                                Ver
                             </a>
                         <% } %>
                         
                         <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download>
-                            ⬇️ Descargar: <%= t.getArchivoNombre() %>
+                            Descargar
                         </a>
                     </div>
                 </div>
