@@ -9,14 +9,13 @@
     int semanaId = 0;
     List<Tarea> tareas = new ArrayList<>();
     
-    // Obtener las tareas de forma segura
     if (idParam != null && !idParam.trim().isEmpty()) {
         try {
             semanaId = Integer.parseInt(idParam);
             TareaDAO tareaDAO = new TareaDAO();
             tareas = tareaDAO.getTareasBySemanaId(semanaId);
         } catch (NumberFormatException e) {
-            // Si el ID no es válido, se mantiene en 0 y no mostrará tareas
+            // ID inválido
         }
     }
     
@@ -50,12 +49,15 @@
         <% } else { %>
             
             <% for (Tarea t : tareas) { 
-                // Lógica para saber si se puede ver en vista previa
+                // === CORRECCIÓN: Detectar extensión del archivo_nombre, NO de archivo_ruta ===
                 String archivoRuta = t.getArchivoRuta();
+                String archivoNombre = t.getArchivoNombre();
+                
                 String ext = "";
-                if (archivoRuta != null && archivoRuta.contains(".")) {
-                    ext = archivoRuta.substring(archivoRuta.lastIndexOf(".")).toLowerCase();
+                if (archivoNombre != null && archivoNombre.contains(".")) {
+                    ext = archivoNombre.substring(archivoNombre.lastIndexOf(".")).toLowerCase();
                 }
+                
                 boolean esVistaPrevia = ext.equals(".pdf") || ext.equals(".jpg") || ext.equals(".jpeg") || ext.equals(".png");
             %>
                 <div class="tarea-card mb-4 p-4" style="background-color: #1a1a1a; border: 1px solid #333; border-radius: 8px;">
@@ -66,20 +68,16 @@
                     <!-- Botones de acción -->
                     <div class="d-flex gap-2 flex-wrap mt-3">
                         <% if (esVistaPrevia) { %>
-                            <!-- CAMBIO 1: Abrir en nueva pestaña (target="_blank") sin ctx -->
                             <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
                                 👁️ Ver en nueva pestaña
                             </a>
                         <% } %>
                         
-                        <!-- CAMBIO 2: Quitar ctx de la descarga -->
                         <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download>
                             ⬇️ Descargar: <%= t.getArchivoNombre() %>
                         </a>
                     </div>
                 </div>
-                
-                <!-- (EL MODAL SE ELIMINÓ POR COMPLETO PARA EVITAR ERRORES CON CLOUDINARY) -->
                 
             <% } %>
         <% } %>
