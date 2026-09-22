@@ -1,4 +1,4 @@
-  package com.portafolio.controladores;
+package com.portafolio.controladores;
 
 import com.portafolio.dao.TareaDAO;
 import com.portafolio.modelos.Tarea;
@@ -39,11 +39,24 @@ public class VerTareaServlet extends HttpServlet {
             String archivoUrl = tarea.getArchivoRuta();
             String archivoNombre = tarea.getArchivoNombre();
             
+            System.out.println("=== VerTareaServlet: URL = " + archivoUrl);
+            System.out.println("=== VerTareaServlet: Nombre = " + archivoNombre);
+            
             // Abrir conexión a Cloudinary
             URL url = new URL(archivoUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
             conn.connect();
+            
+            int responseCode = conn.getResponseCode();
+            System.out.println("=== VerTareaServlet: Response Code = " + responseCode);
+            
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                    "Error al cargar el archivo desde Cloudinary: " + responseCode);
+                return;
+            }
             
             // Obtener el tipo de contenido
             String contentType = conn.getContentType();
@@ -51,10 +64,13 @@ public class VerTareaServlet extends HttpServlet {
                 contentType = "application/pdf";
             }
             
-            // Configurar response para visualización INLINE
+            System.out.println("=== VerTareaServlet: Content-Type = " + contentType);
+            
+            // === CLAVE: Headers para visualización INLINE ===
             response.setContentType(contentType);
             response.setHeader("Content-Disposition", "inline; filename=\"" + archivoNombre + "\"");
-            response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Content-Length", String.valueOf(conn.getContentLength()));
+            response.setHeader("Cache-Control", "public, max-age=31536000");
             
             // Copiar el archivo de Cloudinary al response
             try (InputStream inputStream = conn.getInputStream();
@@ -65,13 +81,18 @@ public class VerTareaServlet extends HttpServlet {
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
+                outputStream.flush();
             }
             
+            System.out.println("=== VerTareaServlet: PDF enviado correctamente");
+            
         } catch (NumberFormatException e) {
+            e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al cargar el archivo");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Error al cargar el archivo: " + e.getMessage());
         }
     }
 }
