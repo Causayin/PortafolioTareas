@@ -82,12 +82,10 @@ public class SubirTareaServlet extends HttpServlet {
             buffer.flush();
             byte[] fileBytes = buffer.toByteArray();
 
-            String resourceType = "image";
-            if (ext.equals(".mp4") || ext.equals(".webm") || ext.equals(".mov")) {
-                resourceType = "video";
-            } else if (ext.equals(".zip") || ext.equals(".rar") || ext.equals(".doc") || ext.equals(".docx")) {
-                resourceType = "raw"; // Solo para archivos que no se pueden visualizar
-            }
+            // === CORRECCIÓN CLAVE: Usar "auto" ===
+            // Cloudinary detectará automáticamente si es image, video o raw (PDF, ZIP)
+            // Esto evita el error 401 al intentar forzar PDFs como "image"
+            String resourceType = "auto";
 
             Map uploadResult = cloudinary.uploader().upload(
                     fileBytes,
@@ -98,29 +96,17 @@ public class SubirTareaServlet extends HttpServlet {
                     )
             );
 
-            // === CORRECCIÓN: Usar secure_url siempre ===
-            String archivoUrl = "";
-            String publicId = fileName.replaceAll("\\.[^.]+$", "");
-
-            if (resourceType.equals("raw")) {
-                archivoUrl = cloudinary.url()
-                        .resourceType("raw")
-                        .secure(true)
-                        .version((Integer) uploadResult.get("version"))
-                        .generate(publicId);
-
-                // === AGREGA ESTA LÍNEA ===
-                archivoUrl = archivoUrl + "?attachment=false";
-
-            } else {
-                archivoUrl = (String) uploadResult.get("secure_url");
-            }
-
+            // Cloudinary devuelve la URL correcta (HTTPS) automáticamente en "secure_url"
+            // Funciona tanto para imágenes como para archivos raw (PDFs)
+            String archivoUrl = (String) uploadResult.get("secure_url");
+            
+            System.out.println("✅ Archivo subido. Tipo detectado: " + uploadResult.get("resource_type"));
             System.out.println("✅ URL generada: " + archivoUrl);
 
             String sql = "INSERT INTO tareas (titulo, descripcion, archivo_nombre, archivo_ruta, semana_id, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            try (Connection conn = ConexionDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            try (Connection conn = ConexionDB.getConnection(); 
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
                 ps.setString(1, titulo);
                 ps.setString(2, descripcion);
@@ -136,6 +122,7 @@ public class SubirTareaServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?mensaje=exito");
 
         } catch (Exception e) {
+            System.out.println("❌ ERROR AL SUBIR: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/admin/gestionar-tareas.jsp?error=fallo");
         }
