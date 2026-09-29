@@ -68,7 +68,7 @@ public class VerTareaServlet extends HttpServlet {
             
             // === CLAVE: Headers para visualización INLINE ===
             response.setContentType(contentType);
-            response.setHeader("Content-Disposition", "inline; filename=\"" + archivoNombre + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + archivoNombre + "\"");
             response.setHeader("Content-Length", String.valueOf(conn.getContentLength()));
             response.setHeader("Cache-Control", "public, max-age=31536000");
             

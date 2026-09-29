@@ -68,26 +68,26 @@
                 <!-- Botones de acción según el tipo de archivo -->
                 <div class="d-flex gap-2 flex-wrap mt-3">
                     <% if (esImagen) { %>
-                        <!-- Para IMÁGENES: Se puede ver y descargar -->
-                        <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
-                            Ver
-                        </a>
-                        <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
-                            Descargar
-                        </a>
+                    <!-- Para IMÁGENES: Se puede ver y descargar -->
+                    <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
+                        Ver
+                    </a>
+                    <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
+                        Descargar
+                    </a>
                     <% } else if (esPDF) { %>
-                        <!-- Para PDFs: Abrir URL directa de Cloudinary (se visualiza con extensión o descarga) -->
-                        <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
-                            Ver
-                        </a>
-                        <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
-                            Descargar PDF
-                        </a>
+                    <!-- Para PDFs: Abrir URL directa de Cloudinary (se visualiza con extensión o descarga) -->
+                    <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
+                        Ver
+                    </a>
+                    <a href="<%= ctx %>/VerTareaServlet?id=<%= t.getId() %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
+                        Descargar PDF
+                    </a>
                     <% } else { %>
-                        <!-- Para otros archivos (ZIP, etc.): Solo descargar -->
-                        <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
-                            Descargar Archivo
-                        </a>
+                    <!-- Para otros archivos (ZIP, etc.): Solo descargar -->
+                    <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
+                        Descargar Archivo
+                    </a>
                     <% } %>
                 </div>
             </div>
