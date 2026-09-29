@@ -1,0 +1,217 @@
+/* ============================================
+   ESTILOS MODERNOS - DETALLE DE SEMANA
+   ============================================ */
+
+/* --- LAYOUT DIVIDIDO --- */
+.split-layout {
+    margin-top: 40px;
+    align-items: flex-start;
+}
+
+/* --- GRID DE TAREAS (IZQUIERDA) --- */
+.tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas fijas */
+    gap: 25px;
+}
+
+/* Si hay solo 1 tarea, que ocupe todo el ancho para que no se vea solitaria */
+.tasks-grid:has(> :only-child) {
+    grid-template-columns: 1fr;
+}
+
+/* --- TARJETA DE TAREA MODERNA --- */
+.modern-task-card {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-task-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #FFD700;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.modern-task-card:hover {
+    transform: translateY(-8px);
+    border-color: #FFD700;
+    box-shadow: 0 15px 30px rgba(255, 215, 0, 0.15);
+}
+
+.modern-task-card:hover::before {
+    opacity: 1;
+    box-shadow: 0 0 15px #FFD700;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.task-title {
+    color: #FFD700;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.task-desc {
+    color: #cccccc; /* Texto gris claro para que se lea bien sobre negro */
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1; /* Empuja los botones hacia abajo */
+}
+
+/* --- BOTONES DE ACCIÓN --- */
+.btn-action {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    flex: 1;
+}
+
+.btn-view {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
+    border: 1px solid #FFD700;
+}
+
+.btn-view:hover {
+    background-color: #FFD700;
+    color: #000000;
+}
+
+.btn-download {
+    background-color: #222222;
+    color: #ffffff;
+    border: 1px solid #444;
+}
+
+.btn-download:hover {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+/* --- ANIMACIÓN 3D CSS (DERECHA) --- */
+.animation-3d-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.floating-folder {
+    position: relative;
+    width: 180px;
+    height: 140px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 12px;
+    animation: float 4s ease-in-out infinite;
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+    z-index: 2;
+}
+
+.folder-tab {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 80px;
+    height: 20px;
+    background: #FFD700;
+    border-radius: 12px 12px 0 0;
+}
+
+.folder-body {
+    position: absolute;
+    bottom: 10px;
+    left: 15px;
+    right: 15px;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px;
+    gap: 8px;
+}
+
+.folder-lines span {
+    display: block;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 3px;
+}
+
+.folder-lines span:nth-child(1) { width: 80%; }
+.folder-lines span:nth-child(2) { width: 60%; }
+.folder-lines span:nth-child(3) { width: 90%; }
+
+.glow-effect {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulse 4s ease-in-out infinite;
+}
+
+.animation-text {
+    margin-top: 40px;
+    color: #FFD700;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 991px) {
+    .tasks-grid {
+        grid-template-columns: 1fr; /* 1 columna en móvil/tablet */
+    }
+    .animation-3d-wrapper {
+        height: 250px;
+        margin-bottom: 30px;
+    }
+    .floating-folder {
+        width: 140px;
+        height: 110px;
+    }
+}
