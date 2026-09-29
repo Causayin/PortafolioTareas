@@ -82,9 +82,11 @@ public class SubirTareaServlet extends HttpServlet {
             buffer.flush();
             byte[] fileBytes = buffer.toByteArray();
 
-            String resourceType = "raw";
-            if (ext.equals(".jpg") || ext.equals(".jpeg") || ext.equals(".png") || ext.equals(".gif")) {
-                resourceType = "image";
+            String resourceType = "image";
+            if (ext.equals(".mp4") || ext.equals(".webm") || ext.equals(".mov")) {
+                resourceType = "video";
+            } else if (ext.equals(".zip") || ext.equals(".rar") || ext.equals(".doc") || ext.equals(".docx")) {
+                resourceType = "raw"; // Solo para archivos que no se pueden visualizar
             }
 
             Map uploadResult = cloudinary.uploader().upload(
