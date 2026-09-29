@@ -97,7 +97,6 @@ public class SubirTareaServlet extends HttpServlet {
             );
 
             // Cloudinary devuelve la URL correcta (HTTPS) automáticamente en "secure_url"
-            // Funciona tanto para imágenes como para archivos raw (PDFs)
             String archivoUrl = (String) uploadResult.get("secure_url");
             
             System.out.println("✅ Archivo subido. Tipo detectado: " + uploadResult.get("resource_type"));

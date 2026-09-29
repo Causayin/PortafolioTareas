@@ -76,8 +76,8 @@
                             Descargar
                         </a>
                     <% } else if (esPDF) { %>
-                        <!-- Para PDFs: Ver (con proxy) y Descargar -->
-                        <a href="<%= ctx %>/VerTareaServlet?id=<%= t.getId() %>" target="_blank" class="btn btn-sm btn-info">
+                        <!-- Para PDFs: Abrir URL directa de Cloudinary (se visualiza con extensión o descarga) -->
+                        <a href="<%= archivoRuta %>" target="_blank" class="btn btn-sm btn-info">
                             Ver
                         </a>
                         <a href="<%= archivoRuta %>" class="btn btn-sm btn-outline-warning" download="<%= archivoNombre %>">
